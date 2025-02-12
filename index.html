@@ -89,11 +89,12 @@
       bottom: 10px;
       left: 10px;
       font-size: 25px;
-      color: rgba(255, 255, 255, 0.5); /* Warna putih dengan transparansi */
-      pointer-events: none; /* Tidak dapat diinteraksi */
-      user-select: none; /* Tidak dapat dipilih */
-      font-family: 'Arial', sans-serif; /* Menggunakan font yang sama */
-      transform: rotate(-30deg); /* Memutar watermark untuk kesulitan edit */
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      user-select: none;
+      font-family: 'Arial', sans-serif;
+      transform: rotate(-30deg);
+      transition: transform 0.2s;
     }
   </style>
 </head>
@@ -120,6 +121,7 @@
     let message = document.querySelector('.message h1');
     let image = document.getElementById('image');
     let buttonScale = 1;
+    let scale = 1;
 
     const messages = [
       'Are you sure? 💖',
@@ -140,17 +142,15 @@
       const heart = document.createElement('div');
       heart.className = 'falling-heart'; 
       heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
-      heart.style.left = Math.random() * 100 + 'vw'; // Posisi acak
+      heart.style.left = Math.random() * 100 + 'vw'; 
       document.body.appendChild(heart);
 
-      // Menghapus elemen setelah animasi selesai
       heart.addEventListener('animationend', () => {
         heart.remove();
       });
     }
 
-    // Tambahkan pemanggilan fungsi createFallingHearts secara terus menerus
-    setInterval(createFallingHearts, 500); // Membuat emote setiap 1 detik
+    setInterval(createFallingHearts, 500); 
 
     yesButton.addEventListener('click', function() {
       message.textContent = 'Knew you would say yes!! 💖';
@@ -178,6 +178,20 @@
 
     document.addEventListener('contextmenu', function(event) {
       event.preventDefault();
+    });
+
+    function updateWatermarkScale() {
+      const watermark = document.querySelector('.watermark');
+      watermark.style.transform = `scale(${scale}) rotate(-30deg)`;
+    }
+
+    window.addEventListener('wheel', function(event) {
+      if (event.deltaY < 0) {
+        scale += 0.1;
+      } else {
+        scale = Math.max(1, scale - 0.1);
+      }
+      updateWatermarkScale();
     });
   </script>
 </body>
